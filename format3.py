@@ -40,11 +40,16 @@ class Format3:
         # Calculate column widths if padding is enabled
         col_widths = {}
         if self.padding:
+            # Initialize with header lengths
             for key in keys:
-                col_widths[key] = max(
-                    len(str(key)),
-                    max(len(str(item.get(key, ""))) for item in data)
-                )
+                col_widths[key] = len(str(key))
+            
+            # Single pass through data to find max widths
+            for item in data:
+                for key in keys:
+                    value_len = len(str(item.get(key, "")))
+                    if value_len > col_widths[key]:
+                        col_widths[key] = value_len
         
         # Create header
         if self.padding:
